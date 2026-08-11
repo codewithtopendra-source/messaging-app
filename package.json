@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@react-email/components": "^1.0.12",
+    "ai": "^7.0.59",
     "bcryptjs": "^3.0.3",
     "mongoose": "^9.7.3",
     "next": "^16.2.10",
     "next-auth": "^4.24.14",
+    "openai": "^7.4.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "resend": "^6.17.1",
