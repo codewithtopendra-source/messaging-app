@@ -5,7 +5,7 @@ import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as z from "zod"
 import { useState, useEffect } from "react"
-import { useDebounceValue } from "usehooks-ts"
+import { useDebounceCallback } from "usehooks-ts"
 import { useRouter } from "next/navigation"
 import { signUpSchema } from "@/schemas/signUpSchema"
 import axios, {AxiosError} from 'axios'
@@ -23,7 +23,7 @@ const page = () => {
   const [usernameMessage, setUsernameMessage] = useState("")
   const [isCheckingUsername, setisCheckingUsername] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [debouncedUsername] = useDebounceValue(username, 300)
+  const debounced = useDebounceCallback(setUsername, 300)
   const router = useRouter()
 
   // zod implementation
@@ -38,11 +38,11 @@ const page = () => {
 
   useEffect(() => {
     const checkUsernameUnique = async () => {
-      if(debouncedUsername) {
+      if(username) {
         setisCheckingUsername(true)
         setUsernameMessage('')
         try{
-          const response = await axios.get(`/api/check-username-unique?username=${debouncedUsername}`)
+          const response = await axios.get(`/api/check-username-unique?username=${username}`)
           setUsernameMessage(response.data.message)
         } catch (error) {
           const axiosError = error as AxiosError<ApiResponse>
@@ -55,7 +55,7 @@ const page = () => {
       }
     }
     checkUsernameUnique()
-  }, [debouncedUsername])
+  }, [username])
   
   const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
     setIsSubmitting(true)
@@ -105,7 +105,7 @@ const page = () => {
                       autoComplete="off"
                       onChange={(e) => {
                         field.onChange(e)
-                        setUsername(e.target.value)
+                        debounced(e.target.value)
                       }}
                     />
                     {isCheckingUsername && (
@@ -115,6 +115,7 @@ const page = () => {
                       <p className="text-sm text-muted-foreground">{usernameMessage}</p>
                     )}
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                    <p className={`text-sm ${usernameMessage === "Username is unique" ? 'text-green-500' : 'text-red-500'}`}>test {usernameMessage}</p>
                   </Field>
                 )}
               />
