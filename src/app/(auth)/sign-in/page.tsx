@@ -67,16 +67,17 @@ const page = () => {
           </p>
         </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FieldGroup>
               <Controller
                 name="identifier"
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Email/Username</FieldLabel>
+                    <FieldLabel htmlFor="identifier">Email/Username</FieldLabel>
                     <Input
                       {...field}
+                      id="identifier"
                       aria-invalid={fieldState.invalid}
                       placeholder="email/username"
                       autoComplete="off"
