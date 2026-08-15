@@ -1,8 +1,9 @@
-import mongoose, {Schema, Document} from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
-export interface Message extends Document {
-    content: string,
-    createdAt: Date
+export interface Message extends Omit<Document, "_id"> {
+    _id: string;
+    content: string;
+    createdAt: Date;
 }
 
 const MessageSchema: Schema<Message> = new Schema({
