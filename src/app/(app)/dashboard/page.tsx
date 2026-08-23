@@ -140,7 +140,9 @@ const page = () => {
             disabled
             className="input input-bordered w-full p-2 mr-2"
           />
-          <Button onClick={copyToClipboard}>Copy</Button>
+          <Button onClick={copyToClipboard} className="cursor-pointer">
+            Copy
+          </Button>
         </div>
       </div>
 
