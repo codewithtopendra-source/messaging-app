@@ -33,6 +33,9 @@ const page = () => {
 
   const form = useForm({
     resolver: zodResolver(acceptMessageSchema),
+    defaultValues: {
+      acceptMessages: false,
+    },
   });
 
   const { register, watch, setValue } = form;

@@ -20,7 +20,12 @@ export async function GET(request: Request) {
   try {
     const user = await UserModel.aggregate([
       { $match: { _id: userId } },
-      { $unwind: '$messages' },
+      {
+        $unwind: {
+          path: '$messages',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
       { $sort: { 'messages.createdAt': -1 } },
       { $group: { _id: '$_id', messages: { $push: '$messages' } } },
     ]).exec();
@@ -32,11 +37,11 @@ export async function GET(request: Request) {
       );
     }
 
+    const messages = (user[0].messages || []).filter(Boolean);
+
     return Response.json(
-      { messages: user[0].messages },
-      {
-        status: 200,
-      }
+      { messages, success: true },
+      { status: 200 }
     );
   } catch (error) {
     console.error('An unexpected error occurred:', error);
