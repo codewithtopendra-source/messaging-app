@@ -51,11 +51,15 @@ const page = () => {
             description: result.error,
           });
         }
+        return;
       }
 
-      if (result?.url) {
-        router.replace("/dashboard");
-      }
+      // Success — do NOT wait for result.url
+      toast.success("Success", {
+        description: "Welcome back",
+      });
+      router.replace("/dashboard");
+      router.refresh();
     } finally {
       setIsSubmitting(false);
     }
