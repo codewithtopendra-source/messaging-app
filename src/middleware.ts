@@ -9,20 +9,19 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  const isAuthPage =
-    pathname.startsWith("/sign-in") ||
-    pathname.startsWith("/sign-up") ||
-    pathname.startsWith("/verify");
+  // Debug on Vercel: check Function Logs if still broken
+  // console.log("path:", pathname, "hasToken:", !!token);
 
-  const isDashboard = pathname.startsWith("/dashboard");
-
-  // Logged in → keep them out of auth pages (home can stay public if you want)
-  if (token && isAuthPage) {
+  if (
+    token &&
+    (pathname.startsWith("/sign-in") ||
+      pathname.startsWith("/sign-up") ||
+      pathname.startsWith("/verify"))
+  ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // Not logged in → block dashboard
-  if (!token && isDashboard) {
+  if (!token && pathname.startsWith("/dashboard")) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
@@ -30,10 +29,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/sign-in",
-    "/sign-up",
-    "/verify/:path*",
-  ],
+  matcher: ["/dashboard/:path*", "/sign-in", "/sign-up", "/verify/:path*"],
 };
